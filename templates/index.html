@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Assignment Submission Portal</title>
+    <style>
+        :root {
+            --navy: #12355b;
+            --blue: #1769aa;
+            --blue-soft: #eaf4fb;
+            --ink: #1b2b3a;
+            --muted: #607387;
+            --line: #d7e2eb;
+            --surface: #ffffff;
+            --page: #f3f7fa;
+            --success: #176b4d;
+            --success-bg: #e9f7f0;
+            --error: #a23838;
+            --error-bg: #fff0f0;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: linear-gradient(135deg, #eef5fa 0%, #f8fbfd 58%, #e6f0f7 100%);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            min-height: 100vh;
+        }
+        .topbar { background: var(--navy); color: white; }
+        .topbar-inner, main { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+        .topbar-inner { padding: 28px 0; }
+        .eyebrow { margin: 0 0 8px; color: #a9d8f6; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        h1 { margin: 0; font-size: clamp(1.7rem, 3vw, 2.45rem); font-weight: 700; }
+        .subtitle { margin: 8px 0 0; color: #d8e9f5; }
+        main { padding: 42px 0 64px; }
+        .layout { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 28px; align-items: start; }
+        .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 28px rgba(18, 53, 91, .08); }
+        .form-panel { padding: 28px; }
+        .section-heading { margin: 0; color: var(--navy); font-size: 1.25rem; }
+        .section-copy { margin: 7px 0 24px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+        .field { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 7px; color: var(--ink); font-size: .87rem; font-weight: 700; }
+        input { width: 100%; padding: 12px 13px; border: 1px solid #bdcddb; border-radius: 5px; color: var(--ink); background: #fcfeff; font: inherit; }
+        input:focus { outline: 3px solid rgba(23, 105, 170, .16); border-color: var(--blue); }
+        button { width: 100%; margin-top: 4px; padding: 13px 18px; border: 0; border-radius: 5px; color: white; background: var(--blue); font: inherit; font-weight: 700; cursor: pointer; }
+        button:hover { background: var(--navy); }
+        .alerts { margin-bottom: 20px; }
+        .alert { margin: 0 0 10px; padding: 12px 14px; border-left: 4px solid; border-radius: 4px; font-size: .9rem; }
+        .alert.error { border-color: var(--error); color: var(--error); background: var(--error-bg); }
+        .alert.success { border-color: var(--success); color: var(--success); background: var(--success-bg); }
+        .list-panel { overflow: hidden; }
+        .list-header { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 24px 26px; border-bottom: 1px solid var(--line); }
+        .count { color: var(--muted); font-size: .85rem; }
+        .submission { padding: 20px 26px; border-bottom: 1px solid var(--line); }
+        .submission:last-child { border-bottom: 0; }
+        .submission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 26px; }
+        .detail-label { display: block; margin-bottom: 4px; color: var(--muted); font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+        .detail-value { overflow-wrap: anywhere; font-size: .95rem; }
+        a { color: var(--blue); font-weight: 600; }
+        .empty { padding: 44px 26px; color: var(--muted); text-align: center; }
+        @media (max-width: 760px) {
+            .topbar-inner, main { width: min(100% - 28px, 560px); }
+            main { padding-top: 28px; }
+            .layout { grid-template-columns: 1fr; gap: 20px; }
+            .form-panel, .list-header, .submission { padding-left: 20px; padding-right: 20px; }
+        }
+        @media (max-width: 480px) {
+            .submission-grid { grid-template-columns: 1fr; gap: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <p class="eyebrow">University DevOps Lab</p>
+            <h1>Assignment Submission Portal</h1>
+            <p class="subtitle">Submit your assignment details for review.</p>
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts" aria-live="polite">
+                    {% for category, message in messages %}
+                        <p class="alert {{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="layout">
+            <section class="panel form-panel" aria-labelledby="form-heading">
+                <h2 class="section-heading" id="form-heading">Submit an assignment</h2>
+                <p class="section-copy">Complete all fields with your assignment information.</p>
+                <form method="post">
+                    <div class="field">
+                        <label for="name">Student Name</label>
+                        <input id="name" name="name" type="text" value="{{ form_values.name }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="registration_number">Registration Number</label>
+                        <input id="registration_number" name="registration_number" type="text" value="{{ form_values.registration_number }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="assignment_title">Assignment Title</label>
+                        <input id="assignment_title" name="assignment_title" type="text" value="{{ form_values.assignment_title }}" required>
+                    </div>
+                    <div class="field">
+                        <label for="submission_url">Submission URL</label>
+                        <input id="submission_url" name="submission_url" type="url" value="{{ form_values.submission_url }}" placeholder="https://example.com/assignment" required>
+                    </div>
+                    <button type="submit">Submit Assignment</button>
+                </form>
+            </section>
+
+            <section class="panel list-panel" aria-labelledby="submissions-heading">
+                <div class="list-header">
+                    <h2 class="section-heading" id="submissions-heading">Submitted assignments</h2>
+                    <span class="count">{{ submissions|length }} total</span>
+                </div>
+                {% if submissions %}
+                    {% for submission in submissions %}
+                        <article class="submission">
+                            <div class="submission-grid">
+                                <div><span class="detail-label">Student Name</span><span class="detail-value">{{ submission.name }}</span></div>
+                                <div><span class="detail-label">Registration Number</span><span class="detail-value">{{ submission.registration_number }}</span></div>
+                                <div><span class="detail-label">Assignment Title</span><span class="detail-value">{{ submission.assignment_title }}</span></div>
+                                <div><span class="detail-label">Submission URL</span><a class="detail-value" href="{{ submission.submission_url }}" target="_blank" rel="noopener noreferrer">Open submission</a></div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p class="empty">No assignments have been submitted yet.</p>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+</body>
+</html>

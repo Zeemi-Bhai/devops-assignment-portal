@@ -1,0 +1,11 @@
+# Python environments and generated cache files
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.venv/
+venv/
+
+# Local test and personal data
+submissions.json
+data/submissions.json
+test-report.json
