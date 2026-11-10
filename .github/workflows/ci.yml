@@ -10,7 +10,7 @@ jobs:
 
     defaults:
       run:
-        shell: bash
+        shell: 'powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "{0}"'
 
     steps:
       - name: Check out repository revision
