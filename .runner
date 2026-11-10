@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 2,
+  "agentName": "ZEEMISLAPTOP",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus25.actions.githubusercontent.com/tYNNxSPz1jeXaYfPTawTSZgiB7GEOU18NWojiWlzAIs4VtmM9W/",
+  "gitHubUrl": "https://github.com/Zeemi-Bhai/devops-assignment-portal",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
