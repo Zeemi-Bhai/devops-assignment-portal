@@ -65,7 +65,7 @@ def index():
         errors = []
 
         for field, label in REQUIRED_FIELDS.items():
-            if not form_values[field]:
+            if field != "registration_number" and not form_values[field]:
                 errors.append(f"{label} is required.")
 
         if form_values["submission_url"] and not is_valid_submission_url(
