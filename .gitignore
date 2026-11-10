@@ -9,3 +9,16 @@ venv/
 submissions.json
 data/submissions.json
 test-report.json
+
+# Self-hosted GitHub Actions runner working files
+_work/
+actions-runner/
+
+# GitHub self-hosted runner
+actions-runner/
+_diag/
+_bin/
+.credentials
+.credentials_rsaparams
+.runner
+actions-runner-win-x64-*.zip
