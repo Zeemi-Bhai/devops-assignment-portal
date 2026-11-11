@@ -161,6 +161,8 @@ The `test` job runs on the self-hosted runner with labels `[self-hosted, Windows
 
 After the test report is delivered, a separate `Email test report` step runs `python scripts/send_email_report.py` with `if: always()`. This sends the actual report by email after both passing and failing test runs. The email is sent through SMTP using these repository secrets: `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM`, and `MAIL_TO`. The sender supports STARTTLS on typical ports and implicit SSL on port 465.
 
+The self-hosted runner checks out under `_work/`, while the receiver writes `test-report.json` beside the main project folder. The email sender checks the runner workspace and then its parent folder, and the optional `TEST_REPORT_FILE` environment variable can point it at another location.
+
 The separate `deploy` job only starts after the `test` job succeeds and only when the pushed branch is `main`. It publishes the `docs/` folder to GitHub Pages with the official Pages actions. It uses GitHub-hosted `ubuntu-latest` because Pages deployment does not need access to the local receiver.
 
 One-time repository setup: open **Settings → Pages** and set **Source** to **GitHub Actions**. The repository must be public, or the GitHub account must support Pages for private repositories.

@@ -8,7 +8,6 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPORT_FILE = PROJECT_ROOT / "test-report.json"
 REQUIRED_SETTINGS = (
     "MAIL_SERVER",
     "MAIL_PORT",
@@ -19,13 +18,45 @@ REQUIRED_SETTINGS = (
 )
 
 
+def report_candidates():
+    configured = os.environ.get("TEST_REPORT_FILE", "").strip()
+    candidates = [Path(configured)] if configured else [PROJECT_ROOT / "test-report.json"]
+
+    # The self-hosted runner checks out under _work/, while the receiver writes
+    # test-report.json beside the main project folder. Search those roots too.
+    workspace = os.environ.get("GITHUB_WORKSPACE", "").strip()
+    if workspace:
+        workspace_path = Path(workspace).resolve()
+        candidates.extend(
+            root / "test-report.json"
+            for root in (workspace_path, workspace_path.parent)
+        )
+
+    unique_candidates = []
+    for candidate in candidates:
+        if candidate not in unique_candidates:
+            unique_candidates.append(candidate)
+    return unique_candidates
+
+
+def find_report():
+    candidates = report_candidates()
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    searched = ", ".join(str(candidate) for candidate in candidates)
+    raise RuntimeError(
+        f"Test report not found. Searched: {searched}. "
+        "Ensure the local receiver is running so scripts/run_tests.py can save it."
+    )
+
+
 def load_report():
+    report_file = find_report()
     try:
-        report = json.loads(REPORT_FILE.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        raise RuntimeError(
-            f"Test report not found at {REPORT_FILE}. Run scripts/run_tests.py first."
-        ) from None
+        report = json.loads(report_file.read_text(encoding="utf-8"))
+    except OSError as error:
+        raise RuntimeError(f"Unable to read test report {report_file}: {error}") from error
     except json.JSONDecodeError as error:
         raise RuntimeError(f"Test report is not valid JSON: {error}") from error
 
