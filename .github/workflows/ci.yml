@@ -33,6 +33,17 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scripts/run_tests.py
 
+      - name: Email test report
+        if: always()
+        env:
+          MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python scripts/send_email_report.py
+
   deploy:
     needs: test
     if: github.ref == 'refs/heads/main'

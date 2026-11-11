@@ -28,7 +28,8 @@ devops-assignment-portal/
 ├── receiver/
 │   └── server.py            # Local HTTP test report receiver
 ├── scripts/
-│   └── run_tests.py         # Runs pytest and delivers the test report
+│   ├── run_tests.py         # Runs pytest and delivers the test report
+│   └── send_email_report.py # Emails the actual JSON test report
 ├── templates/
 │   └── index.html           # Submission portal interface
 ├── tests/
@@ -157,6 +158,8 @@ The receiver stores reports with this structure:
 `.github/workflows/ci.yml` runs on every push and supports manual `workflow_dispatch` runs.
 
 The `test` job runs on the self-hosted runner with labels `[self-hosted, Windows, X64]`. It installs `requirements.txt`, then runs `python scripts/run_tests.py`, which executes pytest, sends the actual report to the local receiver at `http://127.0.0.1:5001/report`, and preserves a non-zero exit code when tests fail. Because the runner is self-hosted on the same Windows computer, `127.0.0.1` reaches the local receiver; start it before running the workflow.
+
+After the test report is delivered, a separate `Email test report` step runs `python scripts/send_email_report.py` with `if: always()`. This sends the actual report by email after both passing and failing test runs. The email is sent through SMTP using these repository secrets: `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM`, and `MAIL_TO`. The sender supports STARTTLS on typical ports and implicit SSL on port 465.
 
 The separate `deploy` job only starts after the `test` job succeeds and only when the pushed branch is `main`. It publishes the `docs/` folder to GitHub Pages with the official Pages actions. It uses GitHub-hosted `ubuntu-latest` because Pages deployment does not need access to the local receiver.
 
