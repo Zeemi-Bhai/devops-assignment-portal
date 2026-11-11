@@ -163,6 +163,8 @@ After the test report is delivered, a separate `Email test report` step runs `py
 
 The self-hosted runner checks out under `_work/`, while the receiver writes `test-report.json` beside the main project folder. The email sender checks the runner workspace and then its parent folder, and the optional `TEST_REPORT_FILE` environment variable can point it at another location.
 
+The sender searches upward from both the script and `GITHUB_WORKSPACE` to the nearest Git repository root, so this works even when the runner executes from a nested `_work` checkout. If your project sits outside that search path, set `TEST_REPORT_FILE` to the report's full path.
+
 The separate `deploy` job only starts after the `test` job succeeds and only when the pushed branch is `main`. It publishes the `docs/` folder to GitHub Pages with the official Pages actions. It uses GitHub-hosted `ubuntu-latest` because Pages deployment does not need access to the local receiver.
 
 One-time repository setup: open **Settings → Pages** and set **Source** to **GitHub Actions**. The repository must be public, or the GitHub account must support Pages for private repositories.

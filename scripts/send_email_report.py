@@ -22,20 +22,25 @@ def report_candidates():
     configured = os.environ.get("TEST_REPORT_FILE", "").strip()
     candidates = [Path(configured)] if configured else [PROJECT_ROOT / "test-report.json"]
 
-    # The self-hosted runner checks out under _work/, while the receiver writes
-    # test-report.json beside the main project folder. Search those roots too.
+    # The receiver writes test-report.json to the project root. A self-hosted
+    # runner may execute this script from a nested _work checkout, so walk up
+    # from both the script and the workspace to the nearest Git repository root.
+    roots = [PROJECT_ROOT]
     workspace = os.environ.get("GITHUB_WORKSPACE", "").strip()
     if workspace:
-        workspace_path = Path(workspace).resolve()
-        candidates.extend(
-            root / "test-report.json"
-            for root in (workspace_path, workspace_path.parent)
-        )
+        roots.append(Path(workspace).resolve())
+
+    for root in roots:
+        for folder in (root, *root.parents):
+            candidates.append(folder / "test-report.json")
+            if (folder / ".git").exists():
+                break
 
     unique_candidates = []
     for candidate in candidates:
-        if candidate not in unique_candidates:
-            unique_candidates.append(candidate)
+        resolved = candidate.resolve()
+        if resolved not in unique_candidates:
+            unique_candidates.append(resolved)
     return unique_candidates
 
 

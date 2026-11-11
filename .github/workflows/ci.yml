@@ -42,6 +42,8 @@ jobs:
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
+          # The local receiver writes to the main project folder, not the runner's checkout.
+          TEST_REPORT_FILE: 'D:\1 UNI\Semester 8\DEVOPS\LAB MID\devops-assignment-portal\test-report.json'
         run: python scripts/send_email_report.py
 
   deploy:
