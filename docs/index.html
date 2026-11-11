@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Static demonstration of the DevOps Assignment Submission Portal.">
+    <title>Assignment Submission Portal | Static Demo</title>
+    <style>
+        :root {
+            --navy: #10375c;
+            --blue: #1d6db3;
+            --sky: #eaf4fb;
+            --ink: #172b3a;
+            --muted: #5b7083;
+            --line: #d3e1eb;
+            --surface: #ffffff;
+            --success: #176b4d;
+            --error: #a83a3a;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            background: linear-gradient(135deg, #edf5fa 0%, #fafdff 55%, #e5f0f8 100%);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+        .site-header { color: #fff; background: var(--navy); }
+        .inner { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+        .site-header .inner { padding: 30px 0 28px; }
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #addcf5;
+            font-size: .76rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        h1 { margin: 0; font-size: clamp(1.75rem, 3.4vw, 2.5rem); }
+        .subtitle { margin: 8px 0 0; color: #d9eaf5; line-height: 1.5; }
+        main.inner { padding: 36px 0 60px; }
+        .demo-notice {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 15px 18px;
+            border: 1px solid #bcd7e9;
+            border-left: 4px solid var(--blue);
+            border-radius: 5px;
+            color: #28485e;
+            background: var(--sky);
+            font-size: .92rem;
+            line-height: 1.55;
+        }
+        .demo-notice strong { color: var(--navy); }
+        .layout { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 26px; align-items: start; }
+        .panel { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 10px 26px rgba(16, 55, 92, .08); }
+        .form-panel { padding: 27px; }
+        h2 { margin: 0; color: var(--navy); font-size: 1.22rem; }
+        .panel-copy { margin: 7px 0 22px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+        .field { margin-bottom: 17px; }
+        label { display: block; margin-bottom: 7px; font-size: .87rem; font-weight: 700; }
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #b6cbd9;
+            border-radius: 5px;
+            color: var(--ink);
+            background: #fcfeff;
+            font: inherit;
+        }
+        input:focus { outline: 3px solid rgba(29, 109, 179, .17); border-color: var(--blue); }
+        input.invalid { border-color: var(--error); }
+        .field-error { min-height: 0; margin: 5px 0 0; color: var(--error); font-size: .8rem; }
+        .field-error:empty { display: none; }
+        button {
+            width: 100%;
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 5px;
+            color: #fff;
+            background: var(--blue);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:hover { background: var(--navy); }
+        .form-message { min-height: 0; margin: 0 0 16px; padding: 11px 13px; border-radius: 4px; font-size: .88rem; }
+        .form-message:empty { display: none; }
+        .form-message.error { border: 1px solid #f0c6c6; color: var(--error); background: #fff2f2; }
+        .form-message.success { border: 1px solid #bde3d1; color: var(--success); background: #edf9f3; }
+        .list-panel { overflow: hidden; }
+        .list-header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 23px 25px; border-bottom: 1px solid var(--line); }
+        .count { color: var(--muted); font-size: .84rem; white-space: nowrap; }
+        .submission { padding: 19px 25px; border-bottom: 1px solid var(--line); }
+        .submission:last-child { border-bottom: 0; }
+        .submission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 24px; }
+        .detail-label { display: block; margin-bottom: 4px; color: var(--muted); font-size: .73rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+        .detail-value { overflow-wrap: anywhere; font-size: .94rem; }
+        a { color: var(--blue); font-weight: 600; }
+        a:hover { color: var(--navy); }
+        .empty { padding: 36px 25px; color: var(--muted); text-align: center; }
+        @media (max-width: 760px) {
+            .inner { width: min(100% - 28px, 560px); }
+            .site-header .inner { padding: 24px 0; }
+            main.inner { padding-top: 26px; }
+            .layout { grid-template-columns: 1fr; gap: 18px; }
+            .form-panel, .list-header, .submission { padding-left: 19px; padding-right: 19px; }
+        }
+        @media (max-width: 480px) {
+            .demo-notice { display: block; }
+            .submission-grid { grid-template-columns: 1fr; gap: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="inner">
+            <p class="eyebrow">University DevOps Lab</p>
+            <h1>Assignment Submission Portal</h1>
+            <p class="subtitle">A static demonstration of the portal interface.</p>
+        </div>
+    </header>
+
+    <main class="inner">
+        <div class="demo-notice" role="note">
+            <strong>Static demo:</strong>
+            <span>This GitHub Pages version demonstrates the form and submission list. It does not connect to the Flask backend, submit to a server, or save any data persistently.</span>
+        </div>
+
+        <div class="layout">
+            <section class="panel form-panel" aria-labelledby="form-heading">
+                <h2 id="form-heading">Submit an assignment</h2>
+                <p class="panel-copy">All fields are required. Browser-side checks validate the URL and keep entries only for this demo.</p>
+
+                <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+
+                <form id="submission-form" novalidate>
+                    <div class="field">
+                        <label for="student-name">Student Name</label>
+                        <input id="student-name" name="name" type="text" autocomplete="name" required aria-describedby="name-error">
+                        <p class="field-error" id="name-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="registration-number">Registration Number</label>
+                        <input id="registration-number" name="registration_number" type="text" required aria-describedby="registration-error">
+                        <p class="field-error" id="registration-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="assignment-title">Assignment Title</label>
+                        <input id="assignment-title" name="assignment_title" type="text" required aria-describedby="title-error">
+                        <p class="field-error" id="title-error" aria-live="polite"></p>
+                    </div>
+                    <div class="field">
+                        <label for="submission-url">Submission URL</label>
+                        <input id="submission-url" name="submission_url" type="url" placeholder="https://example.com/assignment" required aria-describedby="url-error">
+                        <p class="field-error" id="url-error" aria-live="polite"></p>
+                    </div>
+                    <button type="submit">Submit Assignment</button>
+                </form>
+            </section>
+
+            <section class="panel list-panel" aria-labelledby="submissions-heading">
+                <div class="list-header">
+                    <h2 id="submissions-heading">Submitted assignments</h2>
+                    <span class="count" id="submission-count"></span>
+                </div>
+                <div id="submission-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const form = document.querySelector("#submission-form");
+        const list = document.querySelector("#submission-list");
+        const count = document.querySelector("#submission-count");
+        const formMessage = document.querySelector("#form-message");
+
+        const fields = {
+            name: {
+                input: document.querySelector("#student-name"),
+                error: document.querySelector("#name-error"),
+                required: "Student name is required.",
+            },
+            registration_number: {
+                input: document.querySelector("#registration-number"),
+                error: document.querySelector("#registration-error"),
+                required: "Registration number is required.",
+            },
+            assignment_title: {
+                input: document.querySelector("#assignment-title"),
+                error: document.querySelector("#title-error"),
+                required: "Assignment title is required.",
+            },
+            submission_url: {
+                input: document.querySelector("#submission-url"),
+                error: document.querySelector("#url-error"),
+                required: "Submission URL is required.",
+            },
+        };
+
+        // These entries illustrate the layout; they are not loaded from a server.
+        const submissions = [
+            {
+                name: "Ayesha Malik",
+                registration_number: "FA24-BCS-014",
+                assignment_title: "Continuous Integration with GitHub Actions",
+                submission_url: "https://github.com/example/devops-assignment",
+            },
+            {
+                name: "Bilal Ahmed",
+                registration_number: "FA24-BCS-027",
+                assignment_title: "Automated Testing with Pytest",
+                submission_url: "https://github.com/example/pytest-assignment",
+            },
+        ];
+
+        const hostnamePattern = /^(?=.{1,253}\.?$)([A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.?$/;
+
+        function isValidHttpUrl(value) {
+            if (/\s/.test(value)) return false;
+            try {
+                const parsedUrl = new URL(value);
+                return (
+                    (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") &&
+                    Boolean(parsedUrl.hostname) &&
+                    hostnamePattern.test(parsedUrl.hostname)
+                );
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function setFieldError(name, message) {
+            fields[name].input.classList.toggle("invalid", Boolean(message));
+            fields[name].input.setAttribute("aria-invalid", String(Boolean(message)));
+            fields[name].error.textContent = message;
+        }
+
+        function validateField(name) {
+            const value = fields[name].input.value.trim();
+            let message = "";
+            if (!value) {
+                message = fields[name].required;
+            } else if (name === "submission_url" && !isValidHttpUrl(value)) {
+                message = "Submission URL must be a valid HTTP or HTTPS URL.";
+            }
+            setFieldError(name, message);
+            return message;
+        }
+
+        function clearMessage() {
+            formMessage.textContent = "";
+            formMessage.className = "form-message";
+        }
+
+        function createDetail(label, value) {
+            const container = document.createElement("div");
+            const labelElement = document.createElement("span");
+            const valueElement = document.createElement("span");
+            labelElement.className = "detail-label";
+            labelElement.textContent = label;
+            valueElement.className = "detail-value";
+            valueElement.textContent = value;
+            container.append(labelElement, valueElement);
+            return container;
+        }
+
+        function renderSubmissions() {
+            list.replaceChildren();
+            count.textContent = `${submissions.length} sample${submissions.length === 1 ? "" : "s"}`;
+
+            if (submissions.length === 0) {
+                const empty = document.createElement("p");
+                empty.className = "empty";
+                empty.textContent = "No sample assignments are listed.";
+                list.append(empty);
+                return;
+            }
+
+            submissions.forEach((submission) => {
+                const article = document.createElement("article");
+                article.className = "submission";
+                const grid = document.createElement("div");
+                grid.className = "submission-grid";
+                grid.append(
+                    createDetail("Student Name", submission.name),
+                    createDetail("Registration Number", submission.registration_number),
+                    createDetail("Assignment Title", submission.assignment_title)
+                );
+
+                const urlContainer = document.createElement("div");
+                const urlLabel = document.createElement("span");
+                urlLabel.className = "detail-label";
+                urlLabel.textContent = "Submission URL";
+                const link = document.createElement("a");
+                link.className = "detail-value";
+                link.href = submission.submission_url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Open submission";
+                urlContainer.append(urlLabel, link);
+                grid.append(urlContainer);
+                article.append(grid);
+                list.append(article);
+            });
+        }
+
+        Object.keys(fields).forEach((name) => {
+            fields[name].input.addEventListener("blur", () => validateField(name));
+            fields[name].input.addEventListener("input", clearMessage);
+        });
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            clearMessage();
+            const errors = Object.keys(fields).map(validateField).filter(Boolean);
+
+            if (errors.length > 0) {
+                formMessage.textContent = "Please correct the highlighted fields before submitting.";
+                formMessage.className = "form-message error";
+                return;
+            }
+
+            const submission = {};
+            Object.keys(fields).forEach((name) => {
+                submission[name] = fields[name].input.value.trim();
+            });
+            submissions.unshift(submission);
+            renderSubmissions();
+            form.reset();
+            formMessage.textContent = "Demo submission added below. No data was sent to a server.";
+            formMessage.className = "form-message success";
+        });
+
+        renderSubmissions();
+    </script>
+</body>
+</html>

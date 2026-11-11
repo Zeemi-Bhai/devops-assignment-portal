@@ -1,6 +1,6 @@
 # DevOps Assignment Submission Portal
 
-A lightweight Flask web application for submitting and viewing university assignment details. The project also includes isolated pytest tests and a local HTTP receiver that stores real test execution reports as JSON.
+A lightweight Flask web application for submitting and viewing university assignment details. The project also includes isolated pytest tests, a local HTTP receiver that stores real test execution reports as JSON, GitHub Actions CI, and a static GitHub Pages demo.
 
 ## Technologies
 
@@ -15,11 +15,16 @@ A lightweight Flask web application for submitting and viewing university assign
 
 ```text
 devops-assignment-portal/
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # Test reporting and GitHub Pages deployment
 ├── app/
 │   ├── __init__.py          # Flask application factory
 │   └── routes.py            # Form handling, validation, and JSON storage
 ├── data/
 │   └── submissions.json     # Assignment submissions created at runtime
+├── docs/
+│   └── index.html           # Static GitHub Pages demo
 ├── receiver/
 │   └── server.py            # Local HTTP test report receiver
 ├── scripts/
@@ -34,6 +39,12 @@ devops-assignment-portal/
 ```
 
 `data/submissions.json` and `test-report.json` are generated runtime files and are excluded from Git by `.gitignore`.
+
+## Static GitHub Pages Demo
+
+`docs/index.html` is a self-contained static demonstration of the portal interface. It uses plain HTML, CSS, and JavaScript, with browser-side required-field and HTTP/HTTPS URL validation. Its submitted assignments include sample entries and newly added demo entries.
+
+The static demo does not connect to the Flask backend, send data to a server, or save data persistently. Refreshing the page restores only the bundled sample entries.
 
 ## Prerequisites
 
@@ -141,8 +152,16 @@ The receiver stores reports with this structure:
 - `total`, `passed`, and `failed` are calculated from the collected results.
 - `status` is `passed` when there are no failed tests; otherwise it is `failed`.
 
-## Future GitHub Actions Integration
+## GitHub Actions CI and Pages Deployment
 
-GitHub Actions is not configured in this project yet. In a future workflow, a self-hosted Windows runner can check out the repository, create or activate the Python environment, install `requirements.txt`, and run `python scripts/run_tests.py`.
+`.github/workflows/ci.yml` runs on every push and supports manual `workflow_dispatch` runs.
 
-The local receiver would need to be running on the same self-hosted machine for `127.0.0.1:5001` to resolve to the receiver. The workflow would then use the GitHub-provided repository, branch, commit, and run ID environment variables while the runner sends the actual pytest results. A future workflow can use the runner's exit code to mark the job as passed or failed.
+The `test` job runs on the self-hosted runner with labels `[self-hosted, Windows, X64]`. It installs `requirements.txt`, then runs `python scripts/run_tests.py`, which executes pytest, sends the actual report to the local receiver at `http://127.0.0.1:5001/report`, and preserves a non-zero exit code when tests fail. Because the runner is self-hosted on the same Windows computer, `127.0.0.1` reaches the local receiver; start it before running the workflow.
+
+The separate `deploy` job only starts after the `test` job succeeds and only when the pushed branch is `main`. It publishes the `docs/` folder to GitHub Pages with the official Pages actions. It uses GitHub-hosted `ubuntu-latest` because Pages deployment does not need access to the local receiver.
+
+One-time repository setup: open **Settings → Pages** and set **Source** to **GitHub Actions**. The repository must be public, or the GitHub account must support Pages for private repositories.
+
+## Future Improvements
+
+Additional CI features such as email notifications can be added later without changing the Flask application or its test suite.
